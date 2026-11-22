@@ -1,19 +1,3 @@
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const root = document.documentElement;
-let motionEnabled = !reducedMotion.matches;
-const applyMotion = () => {
-  root.dataset.motion = motionEnabled ? "on" : "off";
-  if (!motionEnabled) document.getAnimations().forEach((animation) => {
-    if (animation.effect?.target?.matches?.("[data-reveal]")) animation.finish();
-  });
-  root.dispatchEvent(new Event("motionchange"));
-};
-reducedMotion.addEventListener("change", () => {
-  motionEnabled = !reducedMotion.matches;
-  applyMotion();
-});
-applyMotion();
-
 // Keep every role collapsed on load; request its media only after expansion.
 const experiences = [...document.querySelectorAll("details.experience-item")];
 experiences.forEach((experience) => {
@@ -44,24 +28,8 @@ if (menuButton && menu) {
       menuButton.focus();
     }
   });
-}
-
-// Reveal with the animation API, leaving all content visible if scripts fail.
-if ("IntersectionObserver" in window) {
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(({ target, isIntersecting }) => {
-      if (!isIntersecting) return;
-      target.dataset.visible = "true";
-      if (motionEnabled && typeof target.animate === "function") {
-        target.animate([
-          { opacity: 0, transform: "translateY(24px)" },
-          { opacity: 1, transform: "translateY(0)" }
-        ], { duration: 420, easing: "cubic-bezier(.16,1,.3,1)" });
-      }
-      revealObserver.unobserve(target);
-    });
-  }, { threshold: 0.07 });
-  document.querySelectorAll("[data-reveal]").forEach((element) => revealObserver.observe(element));
+  // Hide mobile navigation only after its menu control is ready.
+  document.documentElement.classList.add("js");
 }
 
 const filters = document.querySelector("[data-filters]");
@@ -89,23 +57,6 @@ if (filters && dishes.length) {
     if (!button || button.getAttribute("aria-pressed") === "true") return;
     filters.querySelectorAll("button").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
     updateGallery(button.dataset.filter);
-    if (motionEnabled) document.querySelector(".dish-gallery")?.animate?.([
-      { opacity: .6 }, { opacity: 1 }
-    ], { duration: 160, easing: "ease-out" });
-  });
-}
-
-// Decorative CSS motion runs only while its section is visible.
-if ("IntersectionObserver" in window) {
-  const decorativeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(({ target, isIntersecting }) => {
-      target.dataset.inView = String(isIntersecting);
-    });
-  });
-  document.querySelectorAll(".hero").forEach((section) => decorativeObserver.observe(section));
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) root.dataset.pageHidden = "true";
-    else delete root.dataset.pageHidden;
   });
 }
 
