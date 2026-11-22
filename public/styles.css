@@ -103,9 +103,9 @@ h3 { font-size: 1.75rem; letter-spacing: -.015em; }
 .experience-toggle::after { transform: rotate(90deg); }
 .experience-item[open] .experience-toggle::after { display: none; }
 .experience-detail { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 38px; padding: 6px 0 30px; }
-.experience-figure a { display: block; background: var(--matte); }
+.experience-figure a { display: block; background: #000; }
 .experience-figure img { width: 100%; aspect-ratio: var(--research-ratio); object-fit: contain; }
-.experience-figure--logo a { background: #f8f9f6; padding: 16px; }
+.experience-figure--logo a { padding: 16px; }
 .experience-figure--logo img { aspect-ratio: var(--research-ratio); }
 .experience-figure figcaption { font-size: .8125rem; line-height: 1.55; color: var(--muted); margin-top: 10px; }
 .experience-credit { display: block; margin-top: 6px; }
